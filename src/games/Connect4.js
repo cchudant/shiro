@@ -5,4 +5,12 @@ export default class Connect4 extends Game {
     super()
     this.module = module
   }
+
+  get maxPlayers() {
+    return 2
+  }
+
+  get minPlayers() {
+    return 2
+  }
 }

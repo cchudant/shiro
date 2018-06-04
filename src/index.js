@@ -10,15 +10,15 @@ export default class Shiro {
 		this.migi = migi
     this.settings = settings
     this.games = Object.values(games)
-      .filter(G => settings.games.some(gg => gg === G.name))
-      .map(G => new G(this))
+      .filter(G => settings.games.some(g => g === G.name))
+    this.games = new Map()
 	}
 
 	// @command(new RegExp(`^${this.settings.command}$`))
 	@command(/^game$/)
 	async usage({ channel }) {
 		await channel.send(
-			`Usage: ${this.migi.settings.prefix}game [game]`
+			`Usage: ${this.migi.settings.prefix}game <join|leave>`
 		)
 		await channel.send(
 			this.games.reduce((s, g) => (s += `- ${g.name}\n`), 'Game list:\n')
@@ -26,6 +26,13 @@ export default class Shiro {
 	}
 
 	// @command(new RegExp(`^${this.settings.command} ([a-zA-Z0-1_-]+)$`))
-	@command(/^game ([a-zA-Z0-1_-]+)$/)
-	join() {}
+	@command(/^game join ([a-zA-Z0-1_-]+)$/)
+	join(message, resGame) {
+    const game = this.games.find(g => g.name === resGame)
+
+    if (!game)
+      return message.channel.send('Impossible de trouver ce jeu.')
+    
+    game.joinWait()
+  }
 }
