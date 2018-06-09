@@ -10,3 +10,5 @@ migi.loadModule(Game)
 migi.on('ready', () => console.log(`Ready @${migi.user.tag}`))
 
 migi.login(process.env.DISCORD_TOKEN)
+
+process.on('unhandledRejection', e => console.error(e))

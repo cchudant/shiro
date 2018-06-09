@@ -33,14 +33,14 @@
   "homepage": "https://github.com/SkyBeastMC/Shiro#readme",
   "dependencies": {
     "@popcorn.moe/migi": "^1.5.0",
-    "canvas": "^1.6.11"
+    "canvas": "^2.0.0-alpha.12"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.47",
-    "@babel/core": "^7.0.0-beta.47",
-    "@babel/node": "^7.0.0-beta.47",
-    "@babel/plugin-proposal-decorators": "^7.0.0-beta.47",
-    "@babel/preset-env": "^7.0.0-beta.47",
+    "@babel/cli": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/node": "^7.0.0-beta.49",
+    "@babel/plugin-proposal-decorators": "^7.0.0-beta.49",
+    "@babel/preset-env": "^7.0.0-beta.49",
     "prettier": "^1.12.1",
     "rimraf": "^2.6.2"
   }
