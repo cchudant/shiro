@@ -42,7 +42,6 @@ export default class Shiro {
 
 	@command(/^game join ([a-zA-Z0-9_-]+)$/)
 	async join({ channel, author }, resGame) {
-		console.log(resGame)
 		const Game = this.games.find(G => G.name === resGame)
 
 		if (!Game) return channel.send('Cannot find that game.')

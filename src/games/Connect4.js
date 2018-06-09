@@ -42,10 +42,8 @@ export default class Connect4 extends EventEmitter {
 		while (this.board[x][y] !== undefined) y--
 
 		this.board[x][y] = this.turn
-		console.log('AMAZING', this.board)
 
 		if (this.winCheck(x, y)) {
-			console.log('winn')
 			this.emit('win', this.turn)
 			return this.displayBoard(`${this.players[this.turn]} won!`)
 		}
@@ -98,19 +96,13 @@ export default class Connect4 extends EventEmitter {
 
 		const check = getter => {
 			let xx = 1
-			console.log('first for')
-			for (let d = 1; d < 4; d++) {
-				console.log(getter(x, y, d), this.turn)
+			for (let d = 1; d < 4; d++)
 				if (getter(x, y, d) === this.turn) xx++
 				else break
-			}
 
-			console.log('second for')
-			for (let d = -1; d > -4; d--) {
-				console.log(getter(x, y, d), this.turn)
+			for (let d = -1; d > -4; d--)
 				if (getter(x, y, d) === this.turn) xx++
 				else break
-			}
 
 			return xx >= 4
 		}
