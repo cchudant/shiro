@@ -60,7 +60,7 @@ export default class Connect4 extends EventEmitter {
 				if (!/^\d$/.exec(content) || content < 1 || content > 7)
 					return channel.send('Please send a number between 1 and 7.')
 
-				if (this.board[content - 1][0])
+				if (this.board[content - 1][0] !== undefined)
 					return channel.send('This column is full!')
 
 				this.migi.removeListener('message', handler)
