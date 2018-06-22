@@ -68,7 +68,7 @@ export default class Shiro {
 		if (started || waitingRoom.length !== Game.nPlayers) return
 
 		const game = new Game(this)
-		game.on('win', () => this.playing.delete(channel.id))
+		game.on('end', () => this.playing.delete(channel.id))
 		await game.start(waitingRoom, channel)
 
 		this.playing.set(channel.id, {

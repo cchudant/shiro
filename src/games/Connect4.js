@@ -17,7 +17,7 @@ export default class Connect4 extends EventEmitter {
 		this.migi = module.migi
 
 		this.board = []
-		for (let i = 0; i < 7; i++) this.board[i] = Array(6)
+		for (let i = 0; i < 7; i++) this.board[i] = Array(6).fill(undefined)
 	}
 
 	static get nPlayers() {
@@ -28,7 +28,7 @@ export default class Connect4 extends EventEmitter {
 		this.players = players
 		this.channel = channel
 		this.turn = 0
-		this.nTurn()
+		return this.nTurn()
 	}
 
 	async nTurn() {
@@ -43,8 +43,13 @@ export default class Connect4 extends EventEmitter {
 
 		this.board[x][y] = this.turn
 
+		if (this.drawCheck()) {
+			this.emit('end') //nobody wins
+			return this.displayBoard(`This is a draw! Nobody wins!`)
+		}
+
 		if (this.winCheck(x, y)) {
-			this.emit('win', this.turn)
+			this.emit('end', this.turn)
 			return this.displayBoard(`${this.players[this.turn]} won!`)
 		}
 
@@ -113,5 +118,9 @@ export default class Connect4 extends EventEmitter {
 			check((x, y, d) => get(x + d, y + d)) ||
 			check((x, y, d) => get(x - d, y + d))
 		)
+	}
+
+	drawCheck() {
+		return !this.board.some(arr => arr.some(p => p === undefined))
 	}
 }
