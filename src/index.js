@@ -68,13 +68,19 @@ export default class Shiro {
 		if (started || waitingRoom.length !== Game.nPlayers) return
 
 		const game = new Game(this)
-		game.on('end', () => this.playing.delete(channel.id))
-		await game.start(waitingRoom, channel)
 
 		this.playing.set(channel.id, {
 			started: true,
 			game
 		})
+		
+		try {
+			await game.start(waitingRoom, channel)
+		} catch (e) {
+			throw e //todo err handling
+		} finally {
+			this.playing.delete(channel.id)
+		}
 	}
 
 	@command(/^game leave$/)

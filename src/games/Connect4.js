@@ -1,6 +1,5 @@
 import { createCanvas, loadImage } from 'canvas'
 import { join } from 'path'
-import EventEmitter from 'events'
 
 const imgDir = join(__dirname, '../../img')
 const images = (async () => {
@@ -10,14 +9,14 @@ const images = (async () => {
 	return { frame, red, yellow }
 })()
 
-export default class Connect4 extends EventEmitter {
+export default class Connect4 {
 	constructor(module) {
 		super()
 		this.module = module
 		this.migi = module.migi
 
 		this.board = []
-		for (let i = 0; i < 7; i++) this.board[i] = Array(6).fill(undefined)
+		for (let i = 0; i < 7; i++) this.board[i] = Array(6).fill(null)
 	}
 
 	static get nPlayers() {
@@ -39,19 +38,17 @@ export default class Connect4 extends EventEmitter {
 		const x = await this.response(player)
 
 		let y = 5
-		while (this.board[x][y] !== undefined) y--
+		while (this.board[x][y] !== null) y--
 
 		this.board[x][y] = this.turn
 
-		if (this.drawCheck()) {
-			this.emit('end') //nobody wins
+		if (this.drawCheck())
 			return this.displayBoard(`This is a draw! Nobody wins!`)
-		}
+				.then(() => null) // nobody wins
 
-		if (this.winCheck(x, y)) {
-			this.emit('end', this.turn)
+		if (this.winCheck(x, y))
 			return this.displayBoard(`${this.players[this.turn]} won!`)
-		}
+				.then(() => this.players[this.turn]) // return who won
 
 		this.turn = (this.turn + 1) % 2
 		return this.nTurn()
@@ -65,7 +62,7 @@ export default class Connect4 extends EventEmitter {
 				if (!/^\d$/.exec(content) || content < 1 || content > 7)
 					return channel.send('Please send a number between 1 and 7.')
 
-				if (this.board[content - 1][0] !== undefined)
+				if (this.board[content - 1][0] !== null)
 					return channel.send('This column is full!')
 
 				this.migi.removeListener('message', handler)
@@ -121,6 +118,6 @@ export default class Connect4 extends EventEmitter {
 	}
 
 	drawCheck() {
-		return !this.board.some(arr => arr.some(p => p === undefined))
+		return !this.board.some(arr => arr.some(p => p === null))
 	}
 }
