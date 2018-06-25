@@ -55,7 +55,7 @@ export default class Shiro {
 		waitingRoom.push(author)
 		await channel.send(embed.info(`${author}: You joined \`${Game.name}\`!`))
 
-		return this.tryStart(channel)
+		this.tryStart(channel) // don't return this promise
 	}
 
 	@command(/^game join ([a-zA-Z0-9_-]+)$/)
@@ -86,7 +86,7 @@ export default class Shiro {
 
 		await channel.send(embed.info(`${author}: You joined \`${Game.name}\`!`))
 
-		return this.tryStart(channel)
+		this.tryStart(channel) // don't return this promise
 	}
 
 	async tryStart(channel) {
