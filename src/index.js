@@ -1,5 +1,6 @@
-import { configurable, command } from '@popcorn.moe/migi'
+import { configurable, command, sendDiscordError } from '@popcorn.moe/migi'
 import * as games from './games'
+import * as embed from './embed'
 
 @configurable('game', {
 	games: Object.keys(games)
@@ -17,47 +18,73 @@ export default class Shiro {
 	}
 
 	@command(/^game$/)
-	async usage({ content, channel }) {
-		await channel.send(`Usage: ${content} <join|leave> ...`)
+	async usage(message) {
+		const { content, channel, author } = message
+		await message.delete()
+
 		await channel.send(
-			this.games.reduce((s, g) => (s += `- ${g.name}\n`), 'Game list:\n')
+			embed.info(
+				this.games.reduce(
+					(s, g) => (s += `- ${g.name}\n`),
+					`${author}: Usage: ${content} <join|leave> ...\n\n**Game list:**\n`
+				)
+			)
 		)
 	}
 
 	@command(/^game join$/)
-	async joinUsage({ content, channel, user }) {
+	async joinUsage(message) {
+		const { content, channel, author } = message
+		await message.delete()
+
 		const playing = this.playing.get(channel.id)
 		if (!playing)
-			return channel.send(`Use \`${content} [game]\` to create a waiting room.`)
+			return channel.send(
+				embed.warn(
+					`${author}: Use \`${content} [game]\` to create a waiting room.`
+				)
+			)
 
 		const { started, waitingRoom, Game } = playing
 
-		if (started) return channel.send(`The game has already started!`)
+		if (started)
+			return channel.send(
+				embed.err(`${author}: The game has already started!`)
+			)
 
-		waitingRoom.push(user)
-		await channel.send(`You joined \`${Game.name}\`!`)
+		waitingRoom.push(author)
+		await channel.send(embed.info(`${author}: You joined \`${Game.name}\`!`))
 
 		return this.tryStart(channel)
 	}
 
 	@command(/^game join ([a-zA-Z0-9_-]+)$/)
-	async join({ channel, author }, resGame) {
+	async join(message, resGame) {
+		const { author, channel } = message
+		await message.delete()
+
 		const Game = this.games.find(G => G.name === resGame)
 
-		if (!Game) return channel.send('Cannot find that game.')
+		if (!Game)
+			return channel.send(embed.err(`${author}: Cannot find this game.`))
 
 		const { started = false, waitingRoom = [], Game: G } =
 			this.playing.get(channel.id) || {}
 
-		if (started) return channel.send(`The game has already started!`)
+		if (started)
+			return channel.send(
+				embed.err(`${author}: The game has already started!`)
+			)
 
 		if (G && G !== Game)
-			return channel.send(`A \`${G.name}\` game has already been choosen.`)
+			return channel.send(
+				embed.err(`${author}: A \`${G.name}\` game has already been choosen.`)
+			)
 
 		waitingRoom.push(author)
 		this.playing.set(channel.id, { started, waitingRoom, Game })
 
-		await channel.send(`You joined \`${Game.name}\`!`)
+		await channel.send(embed.info(`${author}: You joined \`${Game.name}\`!`))
 
 		return this.tryStart(channel)
 	}
@@ -73,11 +100,11 @@ export default class Shiro {
 			started: true,
 			game
 		})
-		
+
 		try {
 			await game.start(waitingRoom, channel)
 		} catch (e) {
-			throw e //todo err handling
+			sendDiscordError(channel, 'Error during the game', e)
 		} finally {
 			this.playing.delete(channel.id)
 		}

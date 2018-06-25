@@ -1,5 +1,6 @@
 import { createCanvas, loadImage } from 'canvas'
 import { join } from 'path'
+import * as embed from '../embed'
 
 const imgDir = join(__dirname, '../img')
 const images = (async () => {
@@ -41,13 +42,13 @@ export default class Connect4 {
 
 		this.board[x][y] = this.turn
 
-		if (this.drawCheck())
-			return this.displayBoard(`This is a draw! Nobody wins!`)
-				.then(() => null) // nobody wins
-
 		if (this.winCheck(x, y))
-			return this.displayBoard(`${this.players[this.turn]} won!`)
-				.then(() => this.players[this.turn]) // return who won
+			return this.displayBoard(`${this.players[this.turn]} won!`).then(
+				() => this.players[this.turn]
+			) // return who won
+
+		if (this.drawCheck())
+			return this.displayBoard(`This is a draw! Nobody wins!`).then(() => null) // nobody wins
 
 		this.turn = (this.turn + 1) % 2
 		return this.nTurn()
@@ -59,10 +60,12 @@ export default class Connect4 {
 				if (channel.id !== this.channel.id || author.id !== player.id) return
 
 				if (!/^\d$/.exec(content) || content < 1 || content > 7)
-					return channel.send('Please send a number between 1 and 7.')
+					return channel.send(
+						embed.err('Please send an integer between 1 and 7.')
+					)
 
 				if (this.board[content - 1][0] !== null)
-					return channel.send('This column is full!')
+					return channel.send(embed.err('This column is full!'))
 
 				this.migi.removeListener('message', handler)
 				resolve(content - 1)
