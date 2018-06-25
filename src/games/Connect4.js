@@ -10,6 +10,8 @@ const images = (async () => {
 	return { frame, red, yellow }
 })()
 
+const emojis = ['🔴', '💛']
+
 export default class Connect4 {
 	constructor(module) {
 		this.module = module
@@ -31,7 +33,7 @@ export default class Connect4 {
 	}
 
 	async nTurn() {
-		await this.displayBoard(`${this.players[this.turn]}'s turn`)
+		await this.displayBoard(`${emojis[this.turn]} ${this.players[this.turn]}'s turn`)
 
 		const player = this.players[this.turn]
 
