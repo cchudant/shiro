@@ -28,7 +28,7 @@ export default class Connect4 {
 	start(players, channel) {
 		this.players = players
 		this.channel = channel
-		this.turn = 0
+		this.turn = 1
 		return this.nTurn()
 	}
 

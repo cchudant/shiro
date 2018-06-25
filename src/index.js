@@ -20,7 +20,7 @@ export default class Shiro {
 	@command(/^game$/)
 	async usage(message) {
 		const { content, channel, author } = message
-		await message.delete()
+		message.deletable && await message.delete()
 
 		await channel.send(
 			embed.info(
@@ -35,7 +35,7 @@ export default class Shiro {
 	@command(/^game join$/)
 	async joinUsage(message) {
 		const { content, channel, author } = message
-		await message.delete()
+		message.deletable && await message.delete()
 
 		const playing = this.playing.get(channel.id)
 		if (!playing)
@@ -61,7 +61,7 @@ export default class Shiro {
 	@command(/^game join ([a-zA-Z0-9_-]+)$/)
 	async join(message, resGame) {
 		const { author, channel } = message
-		await message.delete()
+		message.deletable && await message.delete()
 
 		const Game = this.games.find(G => G.name === resGame)
 
