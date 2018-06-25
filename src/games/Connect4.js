@@ -1,7 +1,7 @@
 import { createCanvas, loadImage } from 'canvas'
 import { join } from 'path'
 
-const imgDir = join(__dirname, '../../img')
+const imgDir = join(__dirname, '../img')
 const images = (async () => {
 	const frame = await loadImage(join(imgDir, 'c4frame.png'))
 	const red = await loadImage(join(imgDir, 'c4red.png'))
@@ -11,7 +11,6 @@ const images = (async () => {
 
 export default class Connect4 {
 	constructor(module) {
-		super()
 		this.module = module
 		this.migi = module.migi
 

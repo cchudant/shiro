@@ -1,6 +1,6 @@
 {
-  "name": "shiro",
-  "version": "1.0.0",
+  "name": "migi-shiro",
+  "version": "1.0.1",
   "description": "Migi module for games",
   "main": "lib",
   "files": [
@@ -10,13 +10,13 @@
   ],
   "scripts": {
     "start": "babel-node dev/playground.js",
-    "build": "rimraf lib && babel src -d lib",
+    "build": "rimraf lib && babel src -d lib --copy-files",
     "prepack": "npm run build",
     "format": "prettier --write src/**/*.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SkyBeastMC/Shiro.git"
+    "url": "git+https://github.com/SkyBeastMC/shiro.git"
   },
   "keywords": [
     "Migi",
@@ -28,9 +28,9 @@
   "author": "SkyBeastMC",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SkyBeastMC/Shiro/issues"
+    "url": "https://github.com/SkyBeastMC/shiro/issues"
   },
-  "homepage": "https://github.com/SkyBeastMC/Shiro#readme",
+  "homepage": "https://github.com/SkyBeastMC/shiro#readme",
   "dependencies": {
     "@popcorn.moe/migi": "^1.5.0",
     "canvas": "^2.0.0-alpha.12"
